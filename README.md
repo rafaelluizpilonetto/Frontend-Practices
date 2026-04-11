@@ -1,1 +1,1 @@
-# Pr-ticas-frontend
+Frontend Practices
