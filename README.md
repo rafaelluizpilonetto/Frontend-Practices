@@ -11,4 +11,5 @@ Tecnologias Utilizadas Até o Momento
 
 ### Projetos
 1 - Página de Suporte / Help Center
-2 - Gerenciador de tarefas
+
+2 - Gerenciador de tarefas (Em desenvolvimento)
