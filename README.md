@@ -6,6 +6,9 @@ Tecnologias Utilizadas Até o Momento
 
 - HTML5
 - CSS3
+- JS
+- React
 
 ### Projetos
 1 - Página de Suporte / Help Center
+2 - Gerenciador de tarefas
