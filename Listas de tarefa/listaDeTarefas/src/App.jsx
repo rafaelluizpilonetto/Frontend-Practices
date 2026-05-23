@@ -9,7 +9,7 @@ function App() {
 
     const [contadorId, setContadorId] = useState(0); //estado para gerar IDs únicos para as tarefas 
 
-    const statusList = ["pendente", "em andamento", "finalizada"]; //lista de status para as tarefas
+    const statusList = ["Pendente", "Em andamento", "Finalizada"]; //lista de status para as tarefas
 
     const [status, setStatus] = useState(statusList[0]); //estado para armazenar o status selecionado para a tarefa
 
@@ -27,7 +27,7 @@ function App() {
             {
                 id: contadorId, //gera um id único
                 ds_tarefa: tarefa, //texto da tarefa
-                status: "pendente" //status inicial
+                status: "Pendente" //status inicial
             }
         ])
 
@@ -40,14 +40,11 @@ function App() {
 
         if (!novaTarefa || novaTarefa.trim() === "") return;
 
-
         const novaTarefas = [...tarefas]; //cria uma cópia do array original de tarefas
-
 
         const index = novaTarefas.findIndex(
             (tarefa) => tarefa.id === id
         ); //encontra o índice da tarefa com o id informado
-
 
         if (index !== -1) {
 
@@ -57,7 +54,7 @@ function App() {
             }; //atualiza a tarefa no índice encontrado
         }
 
-
+        
         setTarefas(novaTarefas); //atualiza o estado com a nova lista de tarefas
     }
     //delete
@@ -81,53 +78,49 @@ function App() {
     }
 
     const totalTarefas = tarefas.length;
-
-    const tarefasFinalizadas = tarefas.filter((tarefa) => tarefa.status === "finalizada").length;
-
-    const tarefasPendentes = tarefas.filter((tarefa) => tarefa.status === "pendente").length;
-
-    const tarefasEmAndamento = tarefas.filter((tarefa) => tarefa.status === "em andamento").length;
+    const tarefasFinalizadas = tarefas.filter((tarefa) => tarefa.status === "Finalizada").length;
+    const tarefasPendentes = tarefas.filter((tarefa) => tarefa.status === "Pendente").length;
+    const tarefasEmAndamento = tarefas.filter((tarefa) => tarefa.status === "Em andamento").length;
 
     //funcão para atualizar o status da tarefa
     const atualizarStatus = (id) => {
 
-    const novaTarefas = [...tarefas];
+        const novaTarefas = [...tarefas];
 
-    const index = novaTarefas.findIndex(
-        (tarefa) => tarefa.id === id
-    );
+        const index = novaTarefas.findIndex(
+            (tarefa) => tarefa.id === id
+        );
 
-    const statusAtual =
-        novaTarefas[index].status;
+        const statusAtual =
+            novaTarefas[index].status;
 
-    let novoStatus;
+        let novoStatus;
 
-    if (statusAtual === "pendente") {
+        if (statusAtual === "Pendente") {
 
-        novoStatus = "em andamento";
+            novoStatus = "Em andamento";
 
-    } else if (
-        statusAtual === "em andamento"
-    ) {
+        } else if (
+            statusAtual === "Em andamento"
+        ) {
 
-        novoStatus = "finalizada";
+            novoStatus = "Finalizada";
 
-    } else {
+        } else {
 
-        novoStatus = "pendente";
-    }
+            novoStatus = "Pendente";
+        }
 
-    novaTarefas[index] = {
-        ...novaTarefas[index],
-        status: novoStatus
+        novaTarefas[index] = {
+            ...novaTarefas[index],
+            status: novoStatus
+        };
+
+        setTarefas(novaTarefas);
     };
 
-    setTarefas(novaTarefas);
-    };
-         
 
     return (
-
         <div className="App">
 
             <nav className='top-navbar'> {/* barra de navegação superior */}
@@ -183,76 +176,62 @@ function App() {
                 </div>
 
 
-                <div className='task-list'> {/* lista de tarefas */}
+                <div className='task-list'>
 
-                    <div className='id-collumn'>
-
-                        <h3>ID</h3>
-
-                        <ul>
-                            {tarefas.map((item) => ( //percorre o array de tarefas
-
-                                <li key={item.id}> {/* cada tarefa recebe uma chave única */}
-
-                                    {item.id} {/* exibe o ID da tarefa */}
-
-                                </li>
-                        
-                            ))}
-
-                        </ul>
-
+                    <div className='task-header'>
+                        <span>ID</span>
+                        <span>Descrição</span>
+                        <span>Status</span>
+                        <span>Ações</span>
                     </div>
 
+                    {tarefas.map((item) => (
 
-                    <div className='ds-collumn'>
-                        
-                        <h3>Descrição</h3>
+                        <div className='task-row' key={item.id}>
 
-                        <ul>
+                            <span>{item.id}</span>
 
-                            {tarefas.map((item) => ( //percorre o array de tarefas
+                            <span>{item.ds_tarefa}</span>
 
-                                <li key={item.id}> {/* cada tarefa recebe uma chave única */}
-                                    {item.ds_tarefa}
+                            <span className={`status ${item.status}`}>
+                                {item.status}
+                            </span>
 
+                            <div className='actions'>
 
-                                    <button onClick={() => atualizarTarefa(item.id, prompt("Atualize a tarefa:"))}>Editar</button> {/* botão para editar a tarefa */}
+                                <button
+                                    className='edit-btn'
+                                    onClick={() =>
+                                        atualizarTarefa(
+                                            item.id,
+                                            prompt("Atualize a tarefa:")
+                                        )
+                                    }
+                                >
+                                    Editar
+                                </button>
 
-                                    <button onClick={() => removerTarefa(item.id)}>Remover</button> {/* botão para remover a tarefa */}
+                                <button
+                                    className='remove-btn'
+                                    onClick={() => removerTarefa(item.id)}
+                                >
+                                    Remover
+                                </button>
 
-                                </li>
+                                <button
+                                    className='status-btn'
+                                    onClick={() => atualizarStatus(item.id)}
+                                >
+                                    Atualizar
+                                </button>
 
-                            ))}
+                            </div>
 
-                        </ul>
+                        </div>
 
-                    </div>
-
-                    <div className='status-collumn'>
-                        
-                        <h3>Status</h3>
-
-                        <ul>
-
-                            {tarefas.map((item) => ( 
-
-                                <li key={item.id}>
-                                    {item.status}
-
-                                    <button onClick={() => atualizarStatus(item.id)}>Atualizar Status</button>
-
-                                </li>
-
-                            ))}
-
-                        </ul>
-
-                    </div>
-
+                    ))}
 
                 </div>
-
             </div>
 
         </div>
