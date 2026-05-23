@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+.top-navbar {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+.cards {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 1rem;
+    place-items: center; /*justify-content: center; do display grid*/
+}
+.card {
+    background-color: #f4f4f4;
+    padding: 1rem;
+    border-radius: 5px;
+    width: 100%;
+    text-align: left;
+    border-top: #f80000 5px solid  ;
+}
+.card_number {
+    font-weight: bold;
+    color: #f80000;
+    font-size: 1.5rem;
+}
+.card_title{
+    font-size: 0.95rem;
+    color: #333;
+
+}
