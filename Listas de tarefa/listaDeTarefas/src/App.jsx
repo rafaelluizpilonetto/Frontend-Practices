@@ -1,5 +1,6 @@
 import './App.css'
 import { useState } from 'react'
+import { Search, User, Trash, SquarePen, RefreshCcw, Plus, ArrowRight, Pin, PinOff } from 'lucide-react'
 
 function App() {
 
@@ -13,12 +14,24 @@ function App() {
 
     const [status, setStatus] = useState(statusList[0]); //estado para armazenar o status selecionado para a tarefa
 
+    const responsavelList = ["Rafael", "Mayra", "Luis"] //lista de responsáveis para as tarefas
+
+    const [fixa, setFixa] = useState(false); //estado para armazenar se a tarefa é fixa ou não
+
+    const [modalEditAberto, setModalEditAberto] = useState(false);//estado para controlar a abertura do modal de edição
+
+    const [tarefaSelecionada, setTarefaSelecionada] = useState(null); 
+
+    const [novaDescricao, setNovaDescricao] = useState("");
+
     //create
     const adicionarTarefa = (event) => {
 
         event.preventDefault(); //impede o navegador de recarregar a página
 
-        if (tarefa.trim() === "") return; //verifica se o campo está vazio ou contém apenas espaços
+        if (tarefa.trim() === "") return (
+            alert("O campo de tarefa não pode estar vazio.")
+        ); //verifica se o campo está vazio ou contém apenas espaços
 
 
         setTarefas([
@@ -27,7 +40,9 @@ function App() {
             {
                 id: contadorId, //gera um id único
                 ds_tarefa: tarefa, //texto da tarefa
-                status: "Pendente" //status inicial
+                status: "Pendente", //status inicial
+                responsavel: responsavelList["A definir"], //responsável inicial
+                fixa: false
             }
         ])
 
@@ -54,7 +69,7 @@ function App() {
             }; //atualiza a tarefa no índice encontrado
         }
 
-        
+
         setTarefas(novaTarefas); //atualiza o estado com a nova lista de tarefas
     }
     //delete
@@ -119,15 +134,43 @@ function App() {
         setTarefas(novaTarefas);
     };
 
+    //função para definir o responsável por cada tarefa
+    const definirResponsavel = (id) => {
+
+        const opcoesResponsaveis = [responsavelList[0], responsavelList[1], responsavelList[2]];
+
+        const [valor, setValor] = useState("");
+        const [aberto, setAberto] = useState(false);
+
+        const opcoesFiltradas = opcoesResponsaveis.filter((item) =>
+            item.toLowerCase().includes(valor.toLowerCase())
+        )
+    };
+
+    //função para fixar ou desafixar uma tarefa
+    const tarefaFixa = (id) => {
+        const novaTarefas = [...tarefas];
+
+        const index = novaTarefas.findIndex(
+            (tarefa) => tarefa.id === id
+        );
+        if (index !== -1) {
+            novaTarefas[index] = {
+                ...novaTarefas[index],
+                fixa: !novaTarefas[index].fixa
+            };
+        }
+        setTarefas(novaTarefas);
+    };
 
     return (
         <div className="App">
 
-            <nav className='top-navbar'> {/* barra de navegação superior */}
-                <h2>Lista de Tarefas</h2>
+            <nav className='top-navbar'>
+                <h2>Gerenciador de tarefas</h2>
             </nav>
 
-            <div className='top-container'> {/* container do topo */}
+            <div className='top-container'>
 
                 <div className='cards'>
 
@@ -152,9 +195,9 @@ function App() {
             </div>
 
 
-            <div className='main-container'> {/* container principal */}
+            <div className='main-container'>
 
-                <div className='forms'> {/* formulário para adicionar tarefas */}
+                <div className='forms'>
 
                     <form onSubmit={adicionarTarefa}>
 
@@ -169,7 +212,7 @@ function App() {
                             } //atualiza o estado conforme o usuário digita
                         />
 
-                        <button className='add-button' type="submit">Adicionar Tarefa</button>
+                        <button className='add-button' type="submit"><Plus size={16} className="icon-btns" /> Adicionar Tarefa</button>
 
                     </form>
 
@@ -183,6 +226,8 @@ function App() {
                         <span>Descrição</span>
                         <span>Status</span>
                         <span>Ações</span>
+                        <span>Responsável</span>
+                        <span>Fixa</span>
                     </div>
 
                     {tarefas.map((item) => (
@@ -191,7 +236,9 @@ function App() {
 
                             <span>{item.id}</span>
 
-                            <span>{item.ds_tarefa}</span>
+                            <span className="task-description">
+                                {item.ds_tarefa}
+                            </span>
 
                             <span className={`status ${item.status}`}>
                                 {item.status}
@@ -201,37 +248,105 @@ function App() {
 
                                 <button
                                     className='edit-btn'
-                                    onClick={() =>
-                                        atualizarTarefa(
-                                            item.id,
-                                            prompt("Atualize a tarefa:")
-                                        )
-                                    }
+                                    onClick={() => {
+                                        setModalEditAberto(true);
+                                        setTarefaSelecionada(item);
+                                        setNovaDescricao(item.ds_tarefa);
+                                    }}
                                 >
-                                    Editar
+                                    <SquarePen size={16} />
                                 </button>
 
                                 <button
                                     className='remove-btn'
                                     onClick={() => removerTarefa(item.id)}
                                 >
-                                    Remover
+                                    <Trash size={16} />
                                 </button>
 
                                 <button
                                     className='status-btn'
                                     onClick={() => atualizarStatus(item.id)}
                                 >
-                                    Atualizar
+                                    <ArrowRight size={16} />
                                 </button>
 
                             </div>
+
+                            <span>
+
+                                <label htmlFor="responsavel"></label>
+
+                                <input list="responsaveis" id="responsavel" name="responsavel" />
+
+                                <datalist id="responsaveis">
+                                    {responsavelList.map((responsavel, index) => (
+                                        <option key={index} value={responsavel} />
+                                    ))}
+                                </datalist>
+
+                            </span>
+
+                            <span>
+
+                                <button
+                                    onClick={() => tarefaFixa(item.id)}
+                                    className='fixa-btn'
+                                >
+                                    {item.fixa
+                                        ? <Pin size={16} className="icon-btns" />
+                                        : <PinOff size={16} className="icon-btns" />
+                                    }
+                                </button>
+
+                            </span>
 
                         </div>
 
                     ))}
 
                 </div>
+                {modalEditAberto && (
+
+                    <div className="modal-overlay">
+
+                        <div className="modal">
+
+                            <h2>Editar tarefa</h2>
+
+                            <input  
+                                type="text"
+                                value={novaDescricao}
+                                onChange={(e) =>
+                                    setNovaDescricao(e.target.value)
+                                }
+                            />
+                            
+                            <button
+                                onClick={() => {
+
+                                    atualizarTarefa(
+                                        tarefaSelecionada.id,
+                                        novaDescricao
+                                    );
+
+                                    setModalEditAberto(false);
+                                }}
+                            >
+                                Salvar
+                            </button>
+
+                            <button onClick={() =>
+                                setModalEditAberto(false)
+                            }>
+                                Fechar
+                            </button>
+
+                        </div>
+
+                    </div>
+                )}
+                
             </div>
 
         </div>
