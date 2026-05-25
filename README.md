@@ -11,5 +11,7 @@ Tecnologias Utilizadas Até o Momento
 
 ### Projetos
 1 - Página de Suporte / Help Center
+  1.1 - Página estática somente com HTML e CSS
 
 2 - Gerenciador de tarefas (Em desenvolvimento)
+
